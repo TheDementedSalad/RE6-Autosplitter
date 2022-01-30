@@ -1,42 +1,41 @@
-// Resident Evil 6 Autosplitter Version 1.0.6 29/04/2021
+// Resident Evil 6 Autosplitter Version 1.1.0 24/11/2021
 // Supports IGT
 // Supports all difficulties & campaigns
 // Splits for campaigns can be obtained from https://www.speedrun.com/re6/resources
-// Script by TheDementedSalad & xlYoshii
-// Pointers by TheDementedSalad, xlYoshii & Moofle
+// Script & Pointers by TheDementedSalad
 
 state ("BH6", "1.06") {
-	float LeonGT: "BH6.exe", 0x13B8CF0, 0x8652D4;
-	float HelenaGT: "BH6.exe", 0x13B8CF0, 0x86538C;
-	float ChrisGT: "BH6.exe", 0x13B8CF0, 0x865444;
-	float PiersGT: "BH6.exe", 0x13B8CF0, 0x8654FC;
-	float JakeGT: "BH6.exe", 0x13B8CF0, 0x8655B4;
-	float SherryGT: "BH6.exe", 0x13B8CF0, 0x86566C;
-	float AdaGT: "BH6.exe", 0x13B8CF0, 0x865724;
-	float AgentGT: "BH6.exe", 0x13B8CF0, 0x8657DC;
-	byte SelCamp: "BH6.exe", 0x13C549C, 0x41290;
-	byte Menu : "BH6.exe", 0x13C623C, 0x2C, 0x258, 0x48, 0x147;
-	byte Cutscene: "BH6.exe", 0x13C5454, 0x86C;
-	int CurLvl: "BH6.exe", 0x13C549C, 0x412A4;
-	byte CharSel: "BH6.exe", 0x13B8CF0, 0x81F5A4; 
-	int DA: "BH6.exe", 0x13C6468, 0x4120; 
+	float LeonGT: 0x13B8CF0, 0x8652D4;
+	float HelenaGT: 0x13B8CF0, 0x86538C;
+	float ChrisGT: 0x13B8CF0, 0x865444;
+	float PiersGT: 0x13B8CF0, 0x8654FC;
+	float JakeGT: 0x13B8CF0, 0x8655B4;
+	float SherryGT: 0x13B8CF0, 0x86566C;
+	float AdaGT: 0x13B8CF0, 0x865724;
+	float AgentGT: 0x13B8CF0, 0x8657DC;
+	byte SelCamp: 0x13C549C, 0x41290;
+	byte Menu: 0x13C623C, 0x2C, 0x258, 0x48, 0x147;
+	byte Cutscene: 0x13C5454, 0x86C;
+	int CurLvl: 0x13C549C, 0x412A4;
+	byte CharSel: 0x13B8CF0, 0x81F5A4; 
+	int DA: 0x13C6468, 0x4120; 
 }
 
 state ("BH6", "1.1.0") {
-	float LeonGT: "BH6.exe", 0x13B8CF0, 0x8652D4;
-	float HelenaGT: "BH6.exe", 0x13B8CF0, 0x86538C;
-	float ChrisGT: "BH6.exe", 0x13B8CF0, 0x865444;
-	float PiersGT: "BH6.exe", 0x13B8CF0, 0x8654FC;
-	float JakeGT: "BH6.exe", 0x13B8CF0, 0x8655B4;
-	float SherryGT: "BH6.exe", 0x13B8CF0, 0x86566C;
-	float AdaGT: "BH6.exe", 0x13B8CF0, 0x865724;
-	float AgentGT: "BH6.exe", 0x13B8CF0, 0x8657DC;
-	byte SelCamp: "BH6.exe", 0x13C549C, 0x41290;
-	byte Menu : "BH6.exe", 0x13C623C, 0x2C, 0x258, 0x48, 0x147;
-	byte Cutscene: "BH6.exe", 0x13C5454, 0x86C;
-	int CurLvl: "BH6.exe", 0x13C549C, 0x412A4;
-	byte CharSel: "BH6.exe", 0x13B8CF0, 0x81F5A4; 
-	int DA: "BH6.exe", 0x13C6468, 0x4120; 
+	float LeonGT: 0x13C2CF0, 0x8652D4;
+	float HelenaGT: 0x13C2CF0, 0x86538C;
+	float ChrisGT: 0x13C2CF0, 0x865444;
+	float PiersGT: 0x13C2CF0, 0x8654FC;
+	float JakeGT: 0x13C2CF0, 0x8655B4;
+	float SherryGT: 0x13C2CF0, 0x86566C;
+	float AdaGT: 0x13C2CF0, 0x865724;
+	float AgentGT: 0x13C2CF0, 0x8657DC;
+	byte SelCamp: 0x13CF49C, 0x41290;
+	byte Menu: 0x13D023C, 0x2C, 0x258, 0x48, 0x147;
+	byte Cutscene: 0x13CF454, 0x86C;
+	int CurLvl: 0x13CF49C, 0x412A4;
+	byte CharSel: 0x13C2CF0, 0x81F5A4; 
+	int DA: 0x13D0468, 0x4120; 
 }
 
 init {
@@ -52,6 +51,10 @@ init {
 }
 
 startup {
+	
+	vars.totalGameTime = 0;
+	vars.currentGT = 0;
+	vars.oldGT = 0;
 
 	vars.Storages = new List<HashSet<int>>
 	{
@@ -80,16 +83,17 @@ startup {
 		871,804,
 		706,703,702},
 	};
-		
-	vars.totalGameTime = 0;
-	vars.currentGT = 0;
-	vars.oldGT = 0;
 	
 	settings.Add("Sub", false, "Sub Chapter Splits");
 	settings.Add("Full", false, "Full Chapter Splits");
 }
 
 start {
+	
+	vars.totalGameTime = 0;
+	vars.currentGT = 0;
+	vars.oldGT = 0;
+	
 	switch ((byte)current.CharSel)
 	{
 	case 0:
@@ -109,10 +113,6 @@ start {
 	case 7:
 		return current.SelCamp == 3 && current.AgentGT > 0 && old.AgentGT == 0 && current.DA > 0;
 	}
-	
-	vars.totalGameTime = 0;
-	vars.currentGT = 0;
-	vars.oldGT = 0;
 }
 
 split {
