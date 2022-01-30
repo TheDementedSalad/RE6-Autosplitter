@@ -1,4 +1,4 @@
-// Resident Evil 6 Autosplitter Version 1.1.0 24/11/2021
+// Resident Evil 6 Autosplitter Version 1.1.6 30/01/2022
 // Supports IGT
 // Supports all difficulties & campaigns
 // Splits for campaigns can be obtained from https://www.speedrun.com/re6/resources
@@ -48,6 +48,15 @@ init {
 			version = "1.1.0";
 			break;
 	}
+}
+
+update{
+    if (timer.CurrentPhase == TimerPhase.NotRunning)
+    {
+        vars.currentGT = 0;
+		vars.oldGT = 0;
+		vars.totalGameTime = 0;
+    }
 }
 
 startup {
@@ -180,9 +189,6 @@ gameTime {
 	
 reset {
 	if (vars.oldGT == vars.currentGT && current.Menu == 4 && current.Cutscene == 0){
-		vars.currentGT = 0;
-		vars.oldGT = 0;
-		vars.totalGameTime = 0;
 		return true;
 	}
 }
