@@ -56,7 +56,6 @@ update{
         vars.currentGT = 0;
 	vars.oldGT = 0;
 	vars.totalGameTime = 0;
-	vars.completedSplits.Clear();
     }
 }
 
@@ -129,14 +128,12 @@ split {
 	if (settings["Sub"] || settings["Full"]){
 		if (vars.currentGT != vars.oldGT && vars.currentGT == 0 && vars.totalGameTime != 0 && current.DA != 0){
 		return true;
-		vars.completedSplits.Add(current.CurLvl);
 		}
 
 	}
 	
 	if (settings["Sub"]){
-	return current.CurLvl != old.CurLvl && vars.Storages[current.SelCamp].Contains(current.CurLvl);
-	vars.completedSplits.Add(current.CurLvl);
+	return current.CurLvl != old.CurLvl && vars.Storages[current.SelCamp].Contains(current.CurLvl) && old.CurLvl != 804;
 	}
 }
 
