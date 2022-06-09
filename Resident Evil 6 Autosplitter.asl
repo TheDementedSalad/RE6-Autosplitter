@@ -1,6 +1,6 @@
-// Resident Evil 6 Autosplitter Version 1.1.6 30/01/2022
+// Resident Evil 6 Autosplitter Version 1.2.0 11/05/2022
 // Supports IGT
-// Supports all difficulties & campaigns
+// Supports both single and all campaigns + all difficulties
 // Splits for campaigns can be obtained from https://www.speedrun.com/re6/resources
 // Script & Pointers by TheDementedSalad
 
@@ -48,19 +48,11 @@ init {
 			version = "1.1.0";
 			break;
 	}
-}
-
-update{
-    if (timer.CurrentPhase == TimerPhase.NotRunning)
-    {
-        vars.currentGT = 0;
-	vars.oldGT = 0;
-	vars.totalGameTime = 0;
-    }
+	
+	vars.completedSplits = new List<int>();
 }
 
 startup {
-	
 	vars.totalGameTime = 0;
 	vars.currentGT = 0;
 	vars.oldGT = 0;
@@ -93,8 +85,28 @@ startup {
 		706,703,702},
 	};
 	
-	settings.Add("Sub", false, "Sub Chapter Splits");
-	settings.Add("Full", false, "Full Chapter Splits");
+	settings.Add("CampType", true, "Select Campaign Type");
+	settings.Add("SingC", false, "Single Campaign", "CampType");
+	settings.Add("AllC", false, "All Campaigns", "CampType");
+	settings.Add("Split", true, "Select Split Type");
+	settings.Add("Sub", false, "Sub Chapter Splits", "Split");
+	settings.Add("Full", false, "Full Chapter Splits", "Split");
+}
+
+update{
+    if (timer.CurrentPhase == TimerPhase.NotRunning)
+    {
+    vars.currentGT = 0;
+	vars.oldGT = 0;
+	vars.totalGameTime = 0;
+	vars.completedSplits.Clear();
+    }
+	
+	if (current.CurLvl == 104 && old.CurLvl == 1100 || current.CurLvl == 500 && old.CurLvl == 1110 || current.CurLvl == 304 && old.CurLvl == 1101 || current.CurLvl == 1000 && old.CurLvl == 1130)
+	{
+		vars.completedSplits.Add(old.CurLvl);
+		return true;
+	}
 }
 
 start {
@@ -126,14 +138,14 @@ start {
 
 split {
 	if (settings["Sub"] || settings["Full"]){
-		if (vars.currentGT != vars.oldGT && vars.currentGT == 0 && vars.totalGameTime != 0 && current.DA != 0){
+		if (vars.currentGT != vars.oldGT && vars.currentGT == 0 && vars.totalGameTime != 0 && current.DA != 0 && current.Menu != 4){
 		return true;
 		}
 
 	}
 	
 	if (settings["Sub"]){
-	return current.CurLvl != old.CurLvl && vars.Storages[current.SelCamp].Contains(current.CurLvl) && old.CurLvl != 804;
+	return current.CurLvl != old.CurLvl && vars.Storages[current.SelCamp].Contains(current.CurLvl) && old.CurLvl != 804 && current.Menu != 4;
 	}
 }
 
@@ -181,14 +193,17 @@ gameTime {
 	if(vars.currentGT > vars.oldGT){
     return TimeSpan.FromSeconds(System.Math.Floor(vars.totalGameTime + vars.currentGT));
     }
-    if (vars.currentGT == 0 && vars.oldGT > 0 && current.DA != 0){
+    if (vars.currentGT == 0 && vars.oldGT > 0 && current.DA != 0 && current.Menu != 4){
         vars.totalGameTime = System.Math.Floor(vars.totalGameTime + vars.oldGT);
         return TimeSpan.FromSeconds(System.Math.Floor(vars.totalGameTime + vars.currentGT));
         }
     } 
 	
-reset {
+reset 
+{
+	if(settings["SingC"]){
 	if (vars.oldGT == vars.currentGT && current.Menu == 4 && current.Cutscene == 0){
 		return true;
+	}
 	}
 }
