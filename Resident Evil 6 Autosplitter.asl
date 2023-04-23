@@ -1,10 +1,10 @@
-// Resident Evil 6 Autosplitter Version 1.2.0 11/05/2022
+// Resident Evil 6 Autosplitter Version 1.3.0 23/04/2023
 // Supports IGT
 // Supports both single and all campaigns + all difficulties
 // Splits for campaigns can be obtained from https://www.speedrun.com/re6/resources
 // Script & Pointers by TheDementedSalad
 
-state ("BH6", "1.06") {
+state ("BH6", "Eng 1.0.6") {
 	float LeonGT: 0x13B8CF0, 0x8652D4;
 	float HelenaGT: 0x13B8CF0, 0x86538C;
 	float ChrisGT: 0x13B8CF0, 0x865444;
@@ -21,7 +21,7 @@ state ("BH6", "1.06") {
 	int DA: 0x13C6468, 0x4120; 
 }
 
-state ("BH6", "1.1.0") {
+state ("BH6", "Eng 1.1.0") {
 	float LeonGT: 0x13C2CF0, 0x8652D4;
 	float HelenaGT: 0x13C2CF0, 0x86538C;
 	float ChrisGT: 0x13C2CF0, 0x865444;
@@ -38,14 +38,34 @@ state ("BH6", "1.1.0") {
 	int DA: 0x13D0468, 0x4120; 
 }
 
+state ("BH6", "Jpn 1.0.6") {
+	float LeonGT: 0x13B7CF0, 0x8652D4;
+	float HelenaGT: 0x13B7CF0, 0x86538C;
+	float ChrisGT: 0x13B7CF0, 0x865444;
+	float PiersGT: 0x13B7CF0, 0x8654FC;
+	float JakeGT: 0x13B7CF0, 0x8655B4;
+	float SherryGT: 0x13B7CF0, 0x86566C;
+	float AdaGT: 0x13B7CF0, 0x865724;
+	float AgentGT: 0x13B7CF0, 0x8657DC;
+	byte SelCamp: 0x13C449C, 0x41290;
+	byte Menu: 0x13C523C, 0x2C, 0x258, 0x48, 0x147;
+	byte Cutscene: 0x13C4454, 0x86C;
+	int CurLvl: 0x13C449C, 0x412A4;
+	byte CharSel: 0x13B7CF0, 0x81F5A4; 
+	int DA: 0x13C5468, 0x4120; 
+}
+
 init {
 	int gmSize = modules.First().ModuleMemorySize;
 	switch (gmSize) {
 		case 21630976:
-			version = "1.06";
+			version = "Eng 1.0.6";
 			break;
 		case 21671936:
-			version = "1.1.0";
+			version = "Eng 1.1.0";
+			break;
+		case 21626880:
+			version = "Jpn 1.0.6";
 			break;
 	}
 	
@@ -86,11 +106,25 @@ startup {
 	};
 	
 	settings.Add("CampType", true, "Select Campaign Type");
+	settings.CurrentDefaultParent = "CampType";
 	settings.Add("SingC", false, "Single Campaign", "CampType");
 	settings.Add("AllC", false, "All Campaigns", "CampType");
+	settings.CurrentDefaultParent = null;
 	settings.Add("Split", true, "Select Split Type");
 	settings.Add("Sub", false, "Sub Chapter Splits", "Split");
 	settings.Add("Full", false, "Full Chapter Splits", "Split");
+	settings.CurrentDefaultParent = null;
+	settings.Add("Coop", false, "CO-OP ONLY - Choose Host Character");
+	settings.CurrentDefaultParent = "Coop";
+	settings.Add("Leon", false, "Leon");
+	settings.Add("Helena", false, "Helena");
+	settings.Add("Chris", false, "Chris");
+	settings.Add("Piers", false, "Piers");
+	settings.Add("Jake", false, "Jake");
+	settings.Add("Sherry", false, "Sherry");
+	settings.Add("Ada", false, "Ada");
+	settings.Add("Agent", false, "Agent");
+	settings.CurrentDefaultParent = null;
 }
 
 update{
@@ -107,6 +141,8 @@ update{
 		vars.completedSplits.Add(old.CurLvl);
 		return true;
 	}
+	
+	//print(modules.First().ModuleMemorySize.ToString());
 }
 
 start {
